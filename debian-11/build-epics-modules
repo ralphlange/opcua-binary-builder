@@ -24,6 +24,7 @@ for v in ${EPICS_VERSIONS}; do
             mv base/modules/${mod}/Makefile base/modules/${mod}/Makefile-do-not-build
         done
     fi
+    echo "USR_CXXFLAGS_Linux += -std=c++11" > base/configure/CONFIG_SITE.local
     make -j2 -s -C base
     make -j2 -s -C base clean
 
