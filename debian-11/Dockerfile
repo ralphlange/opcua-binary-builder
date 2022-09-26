@@ -23,28 +23,18 @@ ENV DEBIAN_FRONTEND=noninteractive WORKDIR=/build
 
 RUN apt-get update \
  && apt-get -y install --no-install-recommends build-essential gcc g++ libssl-dev libxml2-dev \
-    cmake wget ca-certificates \
+    cmake curl ca-certificates \
  && rm -rf /var/lib/apt/lists/*
 
 WORKDIR ${WORKDIR}
 
+ADD build-epics-modules .
+
+RUN ./build-epics-modules
+
 ADD ${SDK_TAR} .
 
-RUN wget -O gtest-1.0.1.tar.gz https://github.com/epics-modules/gtest/archive/refs/tags/v1.0.1.tar.gz \
- && for v in ${EPICS_VERSIONS}; do \
-    wget -O base-${v}.tar.gz https://epics-controls.org/download/base/base-${v}.tar.gz; \
-	mkdir ${WORKDIR}/${v}; \
-	done
-
-RUN for v in ${EPICS_VERSIONS}; do \
-    cd ${WORKDIR}/${v}; \
-	tar xzf ../base-${v}.tar.gz; \
-	mv base-${v} base; \
-	make -s -C base -j all clean; \
-	echo -e "GTEST=${WORKDIR}/${v}/gtest\nOPCUA=${WORKDIR}/${v}/opcua\nEPICS_BASE=${WORKDIR}/${v}/base" > RELEASE.local; \
-	tar xzf ../gtest-1.0.1.tar.gz; \
-	mv gtest-1.0.1 gtest; \
-	make -s -C gtest -j all clean; \
-	done
+# only build static; no patches required
+RUN cd sdk; ./buildSdk.sh -j 2
 
 CMD ["/bin/bash"]

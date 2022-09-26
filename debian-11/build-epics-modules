@@ -1,0 +1,35 @@
+#!/bin/sh
+# Helper script to download and build all EPICS dependencies
+
+# Environment
+# EPICS_VERSIONS    space separated list of EPICS Base versions
+# WORKDIR           build directory
+
+PVA_MODS="normativeTypes pvAccess pvData pvDatabase pva2pva pvaClient"
+
+for v in ${EPICS_VERSIONS}; do
+    mkdir ${WORKDIR}/${v}
+    cd ${WORKDIR}/${v}
+    echo Building EPICS Base ${v} and dependencies
+
+    # Create RELEASE.local
+    echo "GTEST=${WORKDIR}/${v}/gtest\nOPCUA=${WORKDIR}/${v}/opcua\nEPICS_BASE=${WORKDIR}/${v}/base" > RELEASE.local
+
+    # EPICS Base
+    curl -L https://epics-controls.org/download/base/base-${v}.tar.gz | tar xzf -
+    mv base-${v} base
+    # Do not build PVA related modules
+    if [ -d base/modules ]; then
+        for mod in ${PVA_MODS}; do
+            mv base/modules/${mod}/Makefile base/modules/${mod}/Makefile-do-not-build
+        done
+    fi
+    make -j2 -s -C base
+    make -j2 -s -C base clean
+
+    # Module gtest
+    curl -L https://github.com/epics-modules/gtest/archive/refs/tags/v1.0.1.tar.gz | tar xzf -
+    mv gtest-1.0.1 gtest
+    make -j2 -s -C gtest
+    make -j2 -s -C gtest clean
+done
