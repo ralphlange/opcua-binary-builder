@@ -33,8 +33,9 @@ ADD build-epics-modules .
 RUN ./build-epics-modules
 
 ADD ${SDK_TAR} .
+ADD buildSdk.patch .
 
-# only build static; no patches required
-RUN cd sdk; ./buildSdk.sh -j 2
+# only build static; apply the build script patch
+RUN cd sdk; patch < ../buildSdk.patch; ./buildSdk.sh -cRelease -j2
 
 CMD ["/bin/bash"]
