@@ -10,7 +10,7 @@ FROM debian:11
 # EPICS_VERSIONS  list of the base versions to build against
 
 ARG SDK_TAR=uasdkcppclient-src-debian9.13-x86_64-gcc6.3.0-v1.7.4-520.tar.gz
-ARG EPICS_VERSIONS="3.15.9 7.0.6.1 7.0.7"
+ARG EPICS_VERSIONS="3.15.9 7.0.7"
 
 LABEL maintainer="Ralph Lange" \
       org.opencontainers.image.authors="ralph.lange@iter.org"
