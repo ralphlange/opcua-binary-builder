@@ -1,10 +1,13 @@
-# Debian-11 container for building a static version of the OPC UA Device Support
+# Debian container for building a static version of the OPC UA Device Support
 
-# Copyright (C) 2022 Ralph Lange <ralph.lange@gmx.de>
+# Copyright (C) 2022-2023 Ralph Lange <ralph.lange@gmx.de>
 
-FROM debian:11
+ARG RELEASE=11
+FROM debian:${RELEASE}
+ARG RELEASE
 
 # Arguments
+# RELEASE         version of the debian release to build on
 # SDK_TAR         tar file of the Unified Automation SDK C++ Client (without path)
 #                 file must exist in the build context
 # EPICS_VERSIONS  list of the base versions to build against
@@ -15,9 +18,9 @@ ARG EPICS_VERSIONS="3.15.9 7.0.7"
 LABEL maintainer="Ralph Lange" \
       org.opencontainers.image.authors="ralph.lange@gmx.de"
 
-LABEL name="opcua-builder-debian11" version="20230214" \
-      summary="Provides the Debian 11 environment to build the OPC UA Device Support (binary) distribution." \
-      io.k8s.display-name="OPC UA binary builder (Debian 11)"
+LABEL name="opcua-builder-debian${RELEASE}" version="20230214" \
+      summary="Provides the Debian ${RELEASE} environment to build the OPC UA Device Support (binary) distribution." \
+      io.k8s.display-name="OPC UA binary builder (Debian ${RELEASE})"
 
 ENV DEBIAN_FRONTEND=noninteractive WORKDIR=/build
 
