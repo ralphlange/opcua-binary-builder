@@ -13,9 +13,9 @@ ARG SDK_TAR=uasdkcppclient-src-debian9.13-x86_64-gcc6.3.0-v1.7.4-520.tar.gz
 ARG EPICS_VERSIONS="3.15.9 7.0.7"
 
 LABEL maintainer="Ralph Lange" \
-      org.opencontainers.image.authors="ralph.lange@iter.org"
+      org.opencontainers.image.authors="ralph.lange@gmx.de"
 
-LABEL name="opcua-builder-debian11" version="20220326" \
+LABEL name="opcua-builder-debian11" version="20230214" \
       summary="Provides the Debian 11 environment to build the OPC UA Device Support (binary) distribution." \
       io.k8s.display-name="OPC UA binary builder (Debian 11)"
 
