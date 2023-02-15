@@ -18,7 +18,7 @@ ARG EPICS_VERSIONS="3.15.9 7.0.7"
 LABEL maintainer="Ralph Lange" \
       org.opencontainers.image.authors="ralph.lange@gmx.de"
 
-LABEL name="opcua-builder-debian${RELEASE}" version="20230214" \
+LABEL name="opcua-builder-debian${RELEASE}" version="20230215" \
       summary="Provides the Debian ${RELEASE} environment to build the OPC UA Device Support (binary) distribution." \
       io.k8s.display-name="OPC UA binary builder (Debian ${RELEASE})"
 
@@ -41,4 +41,7 @@ ADD buildSdk.patch .
 # only build static; apply the build script patch
 RUN cd sdk; patch < ../buildSdk.patch; ./buildSdk.sh -cRelease -j2
 
-CMD ["/bin/bash"]
+ADD build-opcua-support .
+ADD example2static.patch .
+
+CMD ["${WORKDIR}/build-opcua-support"]

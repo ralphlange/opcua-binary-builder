@@ -1,0 +1,58 @@
+diff -ruN exampleTop/configure/CONFIG_SITE binaryOpcuaIoc/configure/CONFIG_SITE
+--- exampleTop/configure/CONFIG_SITE	2022-03-20 16:34:41.000000000 +0000
++++ binaryOpcuaIoc/configure/CONFIG_SITE	2023-02-15 17:56:58.263113223 +0000
+@@ -59,12 +59,12 @@
+ 
+ # Inside an embedded TOP, use the following definitions
+ # pointing to the configuration of the parent module
+--include $(TOP)/../../CONFIG_SITE.local
+--include $(TOP)/../../configure/CONFIG_SITE.local
+--include $(TOP)/../configure/CONFIG_SITE.local
+--include $(TOP)/configure/CONFIG_SITE.local
+-
+-# Inside a standalone TOP, use the following definitions instead
+-#-include $(TOP)/../CONFIG_SITE.local
++#-include $(TOP)/../../CONFIG_SITE.local
++#-include $(TOP)/../../configure/CONFIG_SITE.local
+ #-include $(TOP)/../configure/CONFIG_SITE.local
+ #-include $(TOP)/configure/CONFIG_SITE.local
++
++# Inside a standalone TOP, use the following definitions instead
++-include $(TOP)/../CONFIG_SITE.local
++-include $(TOP)/../configure/CONFIG_SITE.local
++-include $(TOP)/configure/CONFIG_SITE.local
+diff -ruN exampleTop/configure/RELEASE binaryOpcuaIoc/configure/RELEASE
+--- exampleTop/configure/RELEASE	2022-03-20 16:34:41.000000000 +0000
++++ binaryOpcuaIoc/configure/RELEASE	2023-02-15 17:57:30.009880905 +0000
+@@ -41,12 +41,12 @@
+ 
+ # Inside an embedded TOP, use the following definitions
+ # pointing to the configuration of the parent module
+--include $(TOP)/../../RELEASE.local
+--include $(TOP)/../../configure/RELEASE.local
+--include $(TOP)/../configure/RELEASE.local
+--include $(TOP)/configure/RELEASE.local
+-
+-# Inside a standalone TOP, use the following definitions instead
+-#-include $(TOP)/../RELEASE.local
++#-include $(TOP)/../../RELEASE.local
++#-include $(TOP)/../../configure/RELEASE.local
+ #-include $(TOP)/../configure/RELEASE.local
+ #-include $(TOP)/configure/RELEASE.local
++
++# Inside a standalone TOP, use the following definitions instead
++-include $(TOP)/../RELEASE.local
++-include $(TOP)/../configure/RELEASE.local
++-include $(TOP)/configure/RELEASE.local
+diff -ruN exampleTop/opcuaIocApp/Makefile binaryOpcuaIoc/opcuaIocApp/Makefile
+--- exampleTop/opcuaIocApp/Makefile	2022-03-20 16:34:41.000000000 +0000
++++ binaryOpcuaIoc/opcuaIocApp/Makefile	2023-02-15 18:00:41.339392070 +0000
+@@ -20,6 +20,8 @@
+ 
+ # Add all the support libraries needed by this IOC
+ opcuaIoc_LIBS += opcua
++opcua_DIR = ..
++opcuaIoc_SYS_LIBS_Linux += xml2 crypto
+ 
+ # opcuaIoc_registerRecordDeviceDriver.cpp derives from opcuaIoc.dbd
+ opcuaIoc_SRCS += opcuaIoc_registerRecordDeviceDriver.cpp
