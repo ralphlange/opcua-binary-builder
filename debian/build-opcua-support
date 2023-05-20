@@ -7,20 +7,26 @@
 # OPCUA_VERSION     OPC UA device support version to build
 # DISTRO            distribution tag (for artifact name)
 
+cd ${WORKDIR}
+
+# get and compile OPCUA Support
+curl -L https://github.com/epics-modules/opcua/archive/refs/tags/v${OPCUA_VERSION}.tar.gz | tar xzf -
+mv opcua-${OPCUA_VERSION} opcua
+# workaround: unit tests don't compile using EMBED
+mv opcua/unitTestApp opcua/unitTestAppNO
+
+# copy the example application
+cp -a opcua/exampleTop binaryOpcuaIoc
+( cd binaryOpcuaIoc; patch -p1 < ../example2static.patch )
 
 for v in ${EPICS_VERSIONS}; do
     echo Building OPCUA ${OPCUA_VERSION} for EPICS Base ${v}
 
     cd ${WORKDIR}/${v}
-    # get and compile OPCUA Support
-    curl -L https://github.com/epics-modules/opcua/archive/refs/tags/v${OPCUA_VERSION}.tar.gz | tar xzf -
-    mv opcua-${OPCUA_VERSION} opcua
-    # workaround: unit tests don't compile using EMBED
-    mv opcua/unitTestApp opcua/unitTestAppNO
 
-    # copy the example application
-    cp -a opcua/exampleTop binaryOpcuaIoc
-    ( cd binaryOpcuaIoc; patch -p1 < ../../example2static.patch )
+    # Make a copy for this EPICS version
+    cp -a ../opcua .
+    cp -a ../binaryOpcuaIoc .
 
     make -j2 -C opcua
 
