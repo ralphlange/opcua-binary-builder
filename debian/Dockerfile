@@ -14,17 +14,17 @@ ARG RELEASE
 
 ARG SDK_TAR=uasdkcppclient-src-debian9.13-x86_64-gcc6.3.0-v1.7.4-520.tar.gz
 ARG EPICS_VERSIONS="3.15.9 7.0.7"
+ENV OPCUA_VERSION="0.9.4" WORKDIR=/build \
+    EPICS_VERSIONS=${EPICS_VERSIONS} DISTRO=deb${RELEASE}
 
 LABEL maintainer="Ralph Lange" \
       org.opencontainers.image.authors="ralph.lange@gmx.de"
 
-LABEL name="opcua-builder-debian${RELEASE}" version="20230215" \
+LABEL name="opcua-builder-debian${RELEASE}" version="20230520" \
       summary="Provides the Debian ${RELEASE} environment to build the OPC UA Device Support (binary) distribution." \
       io.k8s.display-name="OPC UA binary builder (Debian ${RELEASE})"
 
-ENV DEBIAN_FRONTEND=noninteractive WORKDIR=/build
-
-RUN apt-get update \
+RUN DEBIAN_FRONTEND=noninteractive apt-get update \
  && apt-get -y install --no-install-recommends build-essential gcc g++ libssl-dev libxml2-dev \
     cmake curl ca-certificates \
  && rm -rf /var/lib/apt/lists/*
@@ -44,4 +44,4 @@ RUN cd sdk; patch < ../buildSdk.patch; ./buildSdk.sh -cRelease -j2
 ADD build-opcua-support .
 ADD example2static.patch .
 
-CMD ["${WORKDIR}/build-opcua-support"]
+CMD ["./build-opcua-support"]
