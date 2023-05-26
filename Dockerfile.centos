@@ -1,0 +1,50 @@
+# CentOS container for building a static version of the OPC UA Device Support
+
+# Copyright (C) 2022-2023 Ralph Lange <ralph.lange@gmx.de>
+
+ARG RELEASE=7
+FROM centos:${RELEASE}
+ARG RELEASE
+ARG VCS_VERSION=<unknown>
+
+# Arguments
+# RELEASE         version of the debian release to build on
+# SDK_TAR         tar file of the Unified Automation SDK C++ Client (without path)
+#                 file must exist in the build context
+# EPICS_VERSIONS  list of the base versions to build against
+# VCS_VERSION     version string (or the opcua-binary-builder project) to include in labels
+
+ARG SDK_TAR=uasdkcppclient-src-debian9.13-x86_64-gcc6.3.0-v1.7.4-520.tar.gz
+ARG EPICS_VERSIONS="3.15.9 7.0.7"
+ENV OPCUA_VERSION="0.9.4" WORKDIR=/build \
+    EPICS_VERSIONS=${EPICS_VERSIONS} DISTRO=rhel${RELEASE}
+
+LABEL maintainer="Ralph Lange" \
+      org.opencontainers.image.authors="ralph.lange@gmx.de"
+
+RUN yum -y update \
+ && yum -y install gcc gcc-c++ openssl-devel libxml2-devel \
+    perl perl-devel perl-Data-Dumper make gettext patch \
+ && yum -y install epel-release && yum -y install cmake3 \
+ && ln -s /usr/bin/cmake3 /usr/bin/cmake \
+ && yum -y clean all && rm -rf /var/cache/yum /var/log/* /tmp/* /var/tmp/* && rm -rf /var/lib/apt/lists/*
+
+WORKDIR ${WORKDIR}
+
+ADD build-epics-modules .
+RUN ./build-epics-modules
+
+ADD ${SDK_TAR} .
+ADD buildSdk.patch .
+
+# only build static; apply the build script patch
+RUN cd sdk; patch < ../buildSdk.patch; ./buildSdk.sh -cRelease -j2
+
+ADD build-opcua-support .
+ADD example2static.patch .
+
+CMD ["./build-opcua-support"]
+
+LABEL name="opcua-builder-centos${RELEASE}" version="builder ${VCS_VERSION} SDK ${SDK_TAR}" \
+      summary="Provides the CentOS ${RELEASE} environment to build the OPC UA Device Support (binary) distribution." \
+      io.k8s.display-name="OPC UA binary builder (CentOS ${RELEASE})"
