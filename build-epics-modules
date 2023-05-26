@@ -10,11 +10,13 @@ PVA_MODS="normativeTypes pvAccess pvData pvDatabase pva2pva pvaClient"
 for v in ${EPICS_VERSIONS}; do
     mkdir ${WORKDIR}/${v}
     cd ${WORKDIR}/${v}
-    echo Building EPICS Base ${v} and dependencies
+    echo
+    echo Building EPICS Base ${v} and gtest support module
+    echo
 
     # Create RELEASE.local and CONFIG_SITE.local
-    echo "GTEST=${WORKDIR}/${v}/gtest\nOPCUA=${WORKDIR}/${v}/opcua\nEPICS_BASE=${WORKDIR}/${v}/base" > RELEASE.local
-    cat > CONFIG_SITE.local << 'END'
+    printf "GTEST=${WORKDIR}/${v}/gtest\nOPCUA=${WORKDIR}/${v}/opcua\nEPICS_BASE=${WORKDIR}/${v}/base\n" > RELEASE.local
+    envsubst > CONFIG_SITE.local << 'END'
 # Path to the Unified Automation OPC UA C++ SDK
 UASDK = ${WORKDIR}/sdk
 
@@ -31,6 +33,11 @@ UASDK_SHRLIB_DIR = $(UASDK_LIB_DIR)
 UASDK_USE_CRYPTO = YES
 UASDK_USE_XMLPARSER = YES
 END
+    echo RELEASE.local:
+    cat RELEASE.local
+    echo CONFIG_SITE.local:
+    cat CONFIG_SITE.local
+    echo
 
     # EPICS Base
     curl -L https://epics-controls.org/download/base/base-${v}.tar.gz | tar xzf -
