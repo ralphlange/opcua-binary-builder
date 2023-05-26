@@ -7,6 +7,12 @@
 # OPCUA_VERSION     OPC UA device support version to build
 # DISTRO            distribution tag (for artifact name)
 
+if ! [ -d /result ]; then
+    echo "Please bind-mount a volume to /result for the build results"
+    echo "(by adding e.g. \"-v ./result:/result\" to the podman command line)"
+    exit 1
+fi
+
 cd ${WORKDIR}
 
 # get and compile OPCUA Support
