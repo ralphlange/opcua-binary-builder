@@ -22,8 +22,9 @@ ENV OPCUA_VERSION="0.9.4" WORKDIR=/build \
 LABEL maintainer="Ralph Lange" \
       org.opencontainers.image.authors="ralph.lange@gmx.de"
 
-RUN yum -y update \
- && yum -y install gcc gcc-c++ openssl-devel libxml2-devel \
+RUN dnf -y update \
+ && if [ "${RELEASE%%.*}" == "8" ]; then OPENSSL=openssl-devel; fi \
+ && dnf -y install gcc gcc-c++ $OPENSSL libxml2-devel \
     perl perl-devel perl-Data-Dumper make cmake gettext patch ca-certificates \
  && yum -y clean all && rm -rf /var/cache/yum /var/log/* /tmp/* /var/tmp/* && rm -rf /var/lib/apt/lists/*
 
