@@ -22,7 +22,8 @@ ENV OPCUA_VERSION="0.9.4" WORKDIR=/build \
 LABEL maintainer="Ralph Lange" \
       org.opencontainers.image.authors="ralph.lange@gmx.de"
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get update \
+RUN export DEBIAN_FRONTEND=noninteractive \
+ && apt-get update \
  && apt-get -y install --no-install-recommends build-essential gcc g++ libssl-dev libxml2-dev gettext-base \
     cmake curl ca-certificates \
  && rm -rf /var/lib/apt/lists/*
