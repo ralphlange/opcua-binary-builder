@@ -1,0 +1,50 @@
+# Debian container for building a static version of the OPC UA Device Support
+
+# Copyright (C) 2022-2023 Ralph Lange <ralph.lange@gmx.de>
+
+ARG RELEASE=20.04
+FROM ubuntu:${RELEASE}
+ARG RELEASE
+ARG VCS_VERSION=<unknown>
+
+# Arguments
+# RELEASE         version of the ubuntu release to build on
+# SDK_TAR         tar file of the Unified Automation SDK C++ Client (without path)
+#                 file must exist in the build context
+# EPICS_VERSIONS  list of the base versions to build against
+# VCS_VERSION     version string (or the opcua-binary-builder project) to include in labels
+
+ARG SDK_TAR=uasdkcppclient-src-debian9.13-x86_64-gcc6.3.0-v1.7.4-520.tar.gz
+ARG EPICS_VERSIONS="3.15.9 7.0.7"
+ENV OPCUA_VERSION="0.9.4" WORKDIR=/build \
+    EPICS_VERSIONS=${EPICS_VERSIONS} DISTRO=ubuntu${RELEASE}
+
+LABEL maintainer="Ralph Lange" \
+      org.opencontainers.image.authors="ralph.lange@gmx.de"
+
+RUN export DEBIAN_FRONTEND=noninteractive \
+ && apt-get update \
+ && if [ ${RELEASE%%.*} -lt 22 ]; then LIBSSL=libssl-dev; fi \
+ && apt-get -y install --no-install-recommends build-essential gcc g++ ${LIBSSL} libxml2-dev gettext-base \
+    cmake curl ca-certificates \
+ && rm -rf /var/lib/apt/lists/*
+
+WORKDIR ${WORKDIR}
+
+ADD build-epics-modules .
+RUN ./build-epics-modules
+
+ADD ${SDK_TAR} .
+ADD buildSdk.patch .
+
+# only build static; apply the build script patch
+RUN cd sdk; patch < ../buildSdk.patch; ./buildSdk.sh -cRelease -j2
+
+ADD build-opcua-support .
+ADD example2static.patch .
+
+CMD ["./build-opcua-support"]
+
+LABEL name="opcua-builder-ubuntu${RELEASE}" version="builder ${VCS_VERSION} SDK ${SDK_TAR}" \
+      summary="Provides the Ubuntu ${RELEASE} environment to build the OPC UA Device Support (binary) distribution." \
+      io.k8s.display-name="OPC UA binary builder (Ubuntu ${RELEASE})"

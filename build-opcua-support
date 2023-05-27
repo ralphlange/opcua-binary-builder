@@ -9,7 +9,7 @@
 
 if ! [ -d /result ]; then
     echo "Please bind-mount a volume to /result for the build results"
-    echo "(by adding e.g. \"-v ./result:/result\" to the podman command line)"
+    echo "(by adding e.g. \"-v ./results:/result\" to the podman command line)"
     exit 1
 fi
 
