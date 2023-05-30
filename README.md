@@ -37,7 +37,7 @@ when running the container to only build for a subset of versions.
 The build command for e.g. Debian 11 would be:
 
 ```
-$ podman build -t opcua-deb11:in-work \
+$ podman build -t opcua-debian11:in-work \
 --build-arg RELEASE=11 \
 --build-arg VCS_VERSION=$(git describe --always --tags --dirty) \
 -f Dockerfile.debian
@@ -47,12 +47,19 @@ Other OS/release combinations can be selected through specifying
 the `RELEASE` argument and the Dockerfile.
 
 Supported and tested combinations:
-| Dockerfile           | RELEASE | Artifact Tag |
-|----------------------|---------|--------------|
-| Dockerfile.debian    | 10      | deb10        |
-| Dockerfile.debian    | 11      | deb11        |
-| Dockerfile.centos    | 7       | rhel7        |
-| Dockerfile.almalinux | 8       | rhel8        |
+| Dockerfile           | RELEASE | Artifact Tag | Note               |
+|----------------------|---------|--------------|--------------------|
+| Dockerfile.debian    | 10      | debian10     |                    |
+| Dockerfile.debian    | 11      | debian11     |                    |
+| Dockerfile.centos    | 7       | rhel7        |                    |
+| Dockerfile.almalinux | 8       | rhel8        |                    |
+| Dockerfile.almalinux | 9       | rhel9        | no OPC UA Security |
+| Dockerfile.ubuntu    | 20.04   | ubuntu20.04  |                    |
+| Dockerfile.ubuntu    | 22.04   | ubuntu22.04  | no OPC UA Security |
+
+RHEL 9 and Ubuntu 22 have bumped the version of the SSL library to
+3.x, which is not compatible with the Unified Automation SDK 1.7.4
+that I have access to.
 
 ## Run the image to build the binary distribution
 
@@ -66,5 +73,5 @@ The simplest execution line for the container image mentioned above
 would be:
 
 ```
-$ podman run -it --rm -v ./results/:/result opcua-deb11:in-work
+$ podman run -it --rm -v ./results/:/result opcua-debian11:in-work
 ```
