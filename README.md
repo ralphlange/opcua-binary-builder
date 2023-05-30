@@ -61,6 +61,10 @@ RHEL 9 and Ubuntu 22 have bumped the version of the SSL library to
 3.x, which is not compatible with the Unified Automation SDK 1.7.4
 that I have access to.
 
+When creating the images for these platforms, you have to set
+`--build-arg USE_CRYPTO=NO` to configure both the SDK and the
+Device Support build correctly.
+
 ## Run the image to build the binary distribution
 
 When running the container, bind-mount a volume to /result.
