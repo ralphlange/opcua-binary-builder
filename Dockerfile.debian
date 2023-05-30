@@ -17,7 +17,7 @@ ARG VCS_VERSION=<unknown>
 ARG SDK_TAR=uasdkcppclient-src-debian9.13-x86_64-gcc6.3.0-v1.7.4-520.tar.gz
 ARG EPICS_VERSIONS="3.15.9 7.0.7"
 ENV OPCUA_VERSION="0.9.4" WORKDIR=/build \
-    EPICS_VERSIONS=${EPICS_VERSIONS} DISTRO=deb${RELEASE}
+    EPICS_VERSIONS=${EPICS_VERSIONS} DISTRO=debian${RELEASE}
 
 LABEL maintainer="Ralph Lange" \
       org.opencontainers.image.authors="ralph.lange@gmx.de"
@@ -30,7 +30,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 
 WORKDIR ${WORKDIR}
 
-ADD build-epics-modules .
+ADD build-epics-modules build-opcua-support example2static.patch .
 RUN ./build-epics-modules
 
 ADD ${SDK_TAR} .
@@ -38,9 +38,6 @@ ADD buildSdk.patch .
 
 # only build static; apply the build script patch
 RUN cd sdk; patch < ../buildSdk.patch; ./buildSdk.sh -cRelease -j2
-
-ADD build-opcua-support .
-ADD example2static.patch .
 
 CMD ["./build-opcua-support"]
 
