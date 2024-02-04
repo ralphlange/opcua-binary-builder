@@ -28,7 +28,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
  && apt-get update \
  && if [ "$USE_CRYPTO" = "YES" ]; then LIBSSL=libssl-dev; fi \
  && apt-get -y install --no-install-recommends build-essential gcc g++ $LIBSSL libxml2-dev gettext-base \
-    cmake curl ca-certificates \
+    cmake curl ca-certificates git \
  && rm -rf /var/lib/apt/lists/*
 
 WORKDIR ${WORKDIR}

@@ -27,7 +27,7 @@ LABEL maintainer="Ralph Lange" \
 RUN dnf -y update \
  && if [ "$USE_CRYPTO" == "YES" ]; then OPENSSL=openssl-devel; fi \
  && dnf -y install gcc gcc-c++ ${OPENSSL} libxml2-devel \
-    perl perl-devel perl-Data-Dumper make cmake gettext patch ca-certificates \
+    perl perl-devel perl-Data-Dumper make cmake gettext patch ca-certificates git \
  && yum -y clean all && rm -rf /var/cache/yum /var/log/* /tmp/* /var/tmp/* && rm -rf /var/lib/apt/lists/*
 
 WORKDIR ${WORKDIR}

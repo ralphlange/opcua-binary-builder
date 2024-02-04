@@ -27,7 +27,7 @@ LABEL maintainer="Ralph Lange" \
 RUN yum -y update \
  && if [ "$USE_CRYPTO" == "YES" ]; then OPENSSL=openssl-devel; fi \
  && yum -y install gcc gcc-c++ ${OPENSSL} libxml2-devel \
-    perl perl-devel perl-Data-Dumper make gettext patch \
+    perl perl-devel perl-Data-Dumper make gettext patch git \
  && yum -y install epel-release && yum -y install cmake3 \
  && ln -s /usr/bin/cmake3 /usr/bin/cmake \
  && yum -y clean all && rm -rf /var/cache/yum /var/log/* /tmp/* /var/tmp/* && rm -rf /var/lib/apt/lists/*
