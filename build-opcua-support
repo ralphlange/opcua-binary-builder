@@ -1,6 +1,8 @@
 #!/bin/sh
 # Helper script to build OPC UA Device Support and create the binary distribution module
 
+# Copyright (C) 2022-2024 Ralph Lange <ralph.lange@gmx.de>
+
 # Environment
 # WORKDIR           root of work area
 # EPICS_VERSIONS    space separated list of EPICS Base versions

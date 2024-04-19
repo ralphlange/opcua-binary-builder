@@ -1,6 +1,8 @@
 #!/bin/sh
 # Helper script to download and build all EPICS dependencies
 
+# Copyright (C) 2022-2024 Ralph Lange <ralph.lange@gmx.de>
+
 # Environment
 # EPICS_VERSIONS    space separated list of EPICS Base versions
 # WORKDIR           build directory

@@ -1,6 +1,6 @@
 # Debian container for building a static version of the OPC UA Device Support
 
-# Copyright (C) 2022-2023 Ralph Lange <ralph.lange@gmx.de>
+# Copyright (C) 2022-2024 Ralph Lange <ralph.lange@gmx.de>
 
 ARG RELEASE=11
 FROM debian:${RELEASE}
