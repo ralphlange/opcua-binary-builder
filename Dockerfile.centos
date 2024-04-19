@@ -34,15 +34,15 @@ RUN yum -y update \
 
 WORKDIR ${WORKDIR}
 
-ADD build-epics-modules build-opcua-support example2static.patch .
-ADD distribSup distribSup
-RUN ./build-epics-modules
-
 ADD ${SDK_TAR} .
 ADD buildSdk.patch .
 
 # only build static; apply the build script patch
 RUN cd sdk; patch < ../buildSdk.patch; ./buildSdk.sh -cRelease -j2
+
+ADD build-epics-modules build-opcua-support example2static.patch .
+ADD distribSup distribSup
+RUN ./build-epics-modules
 
 CMD ["./build-opcua-support"]
 
