@@ -55,6 +55,6 @@ for v in ${EPICS_VERSIONS}; do
     cp -af opcua/lib/linux-x86_64/libopcua.so* opcuaBinaryDist/distribSup/
     
     # create TAR
-    TARFILE=IOC_opcua-${OPCUA_VERSION}_Base-${v}_${DISTRO}.tar.gz
+    TARFILE=BDIST_opcua-${OPCUA_VERSION}_Base-${v}_${DISTRO}.tar.gz
     tar czvf /result/$TARFILE opcuaBinaryDist opcuaExampleIoc
 done
