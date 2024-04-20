@@ -39,7 +39,7 @@ ADD buildSdk.patch .
 # only build static; apply the build script patch
 RUN cd sdk; patch < ../buildSdk.patch; ./buildSdk.sh -cRelease -j2
 
-ADD build-epics-modules build-opcua-support example2static.patch .
+ADD build-epics-modules build-opcua-support example2static.patch HOW_TO.md .
 ADD distribSup distribSup
 RUN ./build-epics-modules
 
