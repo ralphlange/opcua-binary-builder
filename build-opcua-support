@@ -22,18 +22,24 @@ mv opcua-${OPCUA_VERSION} opcua
 mv opcua/unitTestApp opcua/unitTestAppNO
 
 # copy the example application
-cp -a opcua/exampleTop binaryOpcuaIoc
-( cd binaryOpcuaIoc; patch -p1 < ../example2static.patch )
+cp -a opcua/exampleTop opcuaExampleIoc
+( cd opcuaExampleIoc; patch -p1 < ../example2static.patch )
 
 for v in ${EPICS_VERSIONS}; do
     echo Building OPCUA ${OPCUA_VERSION} for EPICS Base ${v}
 
     cd ${WORKDIR}/${v}
 
-    # Make a copy for this EPICS version
+    # Make a copy of everything for this EPICS version
     cp -a ../opcua .
-    cp -a ../binaryOpcuaIoc .
+    cp -a ../opcuaExampleIoc .
+    # Run makeBaseApp twice because of a bug (Makefile not created)
+    ( mkdir opcuaBinaryDist; cd opcuaBinaryDist; \
+      ${WORKDIR}/${v}/base/bin/linux-x86_64/makeBaseApp.pl -t support bla; \
+      ${WORKDIR}/${v}/base/bin/linux-x86_64/makeBaseApp.pl -t support bla; \
+      rm -fr blaApp; cp -a ../../distribSup . )
 
+    # Build the device support module
     make -j2 -C opcua
 
     # strip symbols from shared library
@@ -44,12 +50,11 @@ for v in ${EPICS_VERSIONS}; do
     strip --strip-all --discard-all $LIBRARY
     chmod -w $LIBRARY
 
-    # copy binary distribution
-    cp -af opcua/dbd/*.dbd binaryOpcuaIoc/opcuaIocApp/
-    cp -af opcua/lib/linux-x86_64/libopcua.so* binaryOpcuaIoc/opcuaIocApp/
+    # copy into binary distribution
+    cp -af opcua/dbd/*.dbd opcuaBinaryDist/distribSup/
+    cp -af opcua/lib/linux-x86_64/libopcua.so* opcuaBinaryDist/distribSup/
     
     # create TAR
     TARFILE=IOC_opcua-${OPCUA_VERSION}_Base-${v}_${DISTRO}.tar.gz
-    tar czvf $TARFILE binaryOpcuaIoc
-    mv $TARFILE /result/
+    tar czvf /result/$TARFILE opcuaBinaryDist opcuaExampleIoc
 done

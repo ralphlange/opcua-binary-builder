@@ -35,6 +35,7 @@ RUN yum -y update \
 WORKDIR ${WORKDIR}
 
 ADD build-epics-modules build-opcua-support example2static.patch .
+ADD distribSup distribSup
 RUN ./build-epics-modules
 
 ADD ${SDK_TAR} .

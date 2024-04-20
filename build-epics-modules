@@ -8,6 +8,27 @@
 
 PVA_MODS="normativeTypes pvAccess pvData pvDatabase pva2pva pvaClient"
 
+envsubst > distribSup/CONFIG_OPCUA << 'END'
+# OPC UA Configuration for user application
+#==================================================
+# Unified Automation SDK libraries - binary distribution
+
+# include guard
+ifeq (,$(_CONFIG_OPCUA_INCLUDED))
+_CONFIG_OPCUA_INCLUDED := YES
+
+# How the Unified Automation SDK libraries were built
+UASDK_USE_CRYPTO = ${USE_CRYPTO}
+UASDK_USE_XMLPARSER = YES
+
+USR_SYS_LIBS_Linux += xml2
+ifeq ($(UASDK_USE_CRYPTO),YES)
+USR_SYS_LIBS_Linux += crypto
+endif
+
+endif # _CONFIG_OPCUA_INCLUDED
+END
+
 for v in ${EPICS_VERSIONS}; do
     mkdir ${WORKDIR}/${v}
     cd ${WORKDIR}/${v}
