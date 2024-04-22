@@ -51,14 +51,16 @@ Supported and tested combinations:
 |----------------------|---------|--------------|--------------------|
 | Dockerfile.debian    | 10      | debian10     |                    |
 | Dockerfile.debian    | 11      | debian11     |                    |
+| Dockerfile.debian    | 12      | debian12     | no OPC UA Security |
 | Dockerfile.centos    | 7       | rhel7        |                    |
 | Dockerfile.almalinux | 8       | rhel8        |                    |
 | Dockerfile.almalinux | 9       | rhel9        | no OPC UA Security |
 | Dockerfile.ubuntu    | 20.04   | ubuntu20.04  |                    |
 | Dockerfile.ubuntu    | 22.04   | ubuntu22.04  | no OPC UA Security |
 
-RHEL 9 and Ubuntu 22 have bumped the version of the SSL library to
-3.x, which is not compatible with the Unified Automation SDK 1.7.4
+RHEL 9, Debian 12 and Ubuntu 22
+have bumped the version of the SSL library to 3.x,
+which is not compatible with the Unified Automation SDK 1.7.4
 that I have access to.
 
 When creating the images for these platforms, you have to set
