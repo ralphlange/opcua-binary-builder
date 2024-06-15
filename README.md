@@ -81,3 +81,14 @@ would be:
 ```
 $ podman run -it --rm -v ./results/:/result opcua-debian11
 ```
+
+## Run the image to test the binary distribution
+
+To run a very basic test,
+which compiles the example app using the binary distribution
+and starts up the resulting IOC,
+run:
+
+```
+$ podman run -it --rm -v ./results/:/result opcua-debian11 ./test-opcua-support
+```

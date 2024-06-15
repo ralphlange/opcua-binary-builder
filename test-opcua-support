@@ -1,0 +1,47 @@
+#!/bin/sh
+# Helper script to test the OPC UA Device Support binary distribution
+
+# Environment
+# WORKDIR           root of work area
+# EPICS_VERSIONS    space separated list of EPICS Base versions
+# OPCUA_VERSION     OPC UA device support version to build
+# DISTRO            distribution tag (for use in artifact name)
+
+if ! [ -d /result ]; then
+    echo "Please bind-mount a volume to /result for access to the build results"
+    echo "(by adding e.g. \"-v ./results:/result:ro\" to the podman command line)"
+    exit 1
+fi
+
+cd ${WORKDIR}
+mkdir test
+
+RESULT=0
+
+for v in ${EPICS_VERSIONS}; do
+    echo Testing OPC UA ${OPCUA_VERSION} binary for EPICS Base ${v}
+
+    mkdir ${WORKDIR}/test/${v}
+    cd ${WORKDIR}/test/${v}
+
+    # Unpack OPCUA Support distribution tar
+    TARFILE=BDIST_opcua-${OPCUA_VERSION}_Base-${v}_${DISTRO}.tar.gz
+    tar xzf /result/$TARFILE
+
+    # Create RELEASE.local
+    printf "EPICS_BASE = ${WORKDIR}/${v}/base\nOPCUA = ${WORKDIR}/test/${v}/opcuaBinaryDist\n" > RELEASE.local
+
+    # Build the binary distribution
+    make -j2 -C opcuaBinaryDist
+
+    # Build the example IOC
+    make -j2 -C opcuaExampleIoc
+
+    # Run the IOC
+    cd opcuaExampleIoc/iocBoot/iocS7-1500
+    echo -e "opcuaShow *\nexit" | ../../bin/linux-x86_64/opcuaIoc st.cmd
+    if [ $? -ne 0 ]; then
+        RESULT=1
+    fi
+done
+exit ${RESULT}
