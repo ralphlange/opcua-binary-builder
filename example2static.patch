@@ -44,15 +44,3 @@ diff -ruN exampleTop/configure/RELEASE binaryOpcuaIoc/configure/RELEASE
 +-include $(TOP)/../RELEASE.local
 +-include $(TOP)/../configure/RELEASE.local
 +-include $(TOP)/configure/RELEASE.local
-diff -ruN exampleTop/opcuaIocApp/Makefile binaryOpcuaIoc/opcuaIocApp/Makefile
---- exampleTop/opcuaIocApp/Makefile	2022-03-20 16:34:41.000000000 +0000
-+++ binaryOpcuaIoc/opcuaIocApp/Makefile	2023-02-15 18:00:41.339392070 +0000
-@@ -20,6 +20,8 @@
- 
- # Add all the support libraries needed by this IOC
- opcuaIoc_LIBS += opcua
-+opcua_DIR = ..
-+opcuaIoc_SYS_LIBS_Linux += xml2 crypto
- 
- # opcuaIoc_registerRecordDeviceDriver.cpp derives from opcuaIoc.dbd
- opcuaIoc_SRCS += opcuaIoc_registerRecordDeviceDriver.cpp
