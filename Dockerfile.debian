@@ -16,7 +16,7 @@ ARG VCS_VERSION=<unknown>
 # USE_CRYPTO      YES/NO include support for OPC UA Security
 
 ARG SDK_TAR=uasdkcppclient-src-debian9.13-x86_64-gcc6.3.0-v1.7.4-520.tar.gz
-ARG EPICS_VERSIONS="3.15.9 7.0.8"
+ARG EPICS_VERSIONS="3.15.9 7.0.8.1"
 ARG USE_CRYPTO="YES"
 ENV OPCUA_VERSION="0.9.5" WORKDIR=/build \
     EPICS_VERSIONS=${EPICS_VERSIONS} DISTRO=debian${RELEASE}
