@@ -24,6 +24,9 @@ ENV OPCUA_VERSION="0.9.5" WORKDIR=/build \
 LABEL maintainer="Ralph Lange" \
       org.opencontainers.image.authors="ralph.lange@gmx.de"
 
+RUN sed -i s/mirror.centos.org/vault.centos.org/g /etc/yum.repos.d/CentOS-*.repo \
+ && sed -i s/^#.*baseurl=http/baseurl=http/g /etc/yum.repos.d/CentOS-*.repo \
+ && sed -i s/^mirrorlist=http/#mirrorlist=http/g /etc/yum.repos.d/CentOS-*.repo
 RUN yum -y update \
  && if [ "$USE_CRYPTO" == "YES" ]; then OPENSSL=openssl-devel; fi \
  && yum -y install gcc gcc-c++ ${OPENSSL} libxml2-devel \
