@@ -55,7 +55,10 @@ for v in ${EPICS_VERSIONS}; do
     # copy into binary distribution
     cp -af opcua/dbd/*.dbd opcuaBinaryDist/distribSup/
     cp -af opcua/lib/linux-x86_64/libopcua.so* opcuaBinaryDist/distribSup/
-    
+
+    # set SHRLIB_VERSION in binary distribution
+    sed -i -e "s/_SHRLIB_VERSION_/$MAJ.$MIN/" opcuaBinaryDist/distribSup/Makefile
+
     # create TAR
     TARFILE=BDIST_opcua-${OPCUA_VERSION}_Base-${v}_${DISTRO}.tar.gz
     tar czvf /result/$TARFILE opcuaBinaryDist opcuaExampleIoc ../HOW_TO.md

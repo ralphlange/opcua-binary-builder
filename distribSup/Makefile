@@ -14,7 +14,7 @@ DBD += menuDefAction.dbd
 
 CFG += CONFIG_OPCUA
 
-SHRLIB_VERSION = 0.9
+SHRLIB_VERSION = _SHRLIB_VERSION_
 LIB_INSTALLS += ../$(SHRLIB_PREFIX)opcua$(SHRLIB_SUFFIX)
 
 #===========================
